@@ -12,10 +12,12 @@ public class Articulo implements Serializable{
     private Calendar inicio_promo;
     private Calendar fin_promo;
     private String[] imagenes;
+    
     public Articulo(){
         this.inicio_promo = new GregorianCalendar();
         this.fin_promo = new GregorianCalendar();
     }
+    
     public Articulo(String id, String nombre, float precio, int cantidad_existencias, String[] imagenes){
         this.id = id;
         this.nombre = nombre;
@@ -27,6 +29,7 @@ public class Articulo implements Serializable{
         //inicio_promo.set(2020,10,10);
         this.fin_promo = new GregorianCalendar();
     }
+    
     public String getId(){
         return id;
     }

@@ -13,6 +13,7 @@ public class Cliente {
     private ObjectInputStream recibir;
     private ObjectOutputStream enviar;
     Socket cl;
+    
     public Cliente(){
         try {
             cl = new Socket("localhost", 3000);
