@@ -5,13 +5,16 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -47,11 +50,11 @@ public class PrincipalCliente extends javax.swing.JFrame {
     public void cargarPlantillaProductos(){
         jPanelContenedor.removeAll();
         for(int i=0; i<articulos.size();i++){
-            crearPlantillaProducto(articulos.get(i), 'c');// c: Catalogo
+            crearPlantillaProducto(articulos.get(i), 'c', i);// c: Catalogo
         }        
     }
     
-    public void crearPlantillaProducto(Articulo A, char c){
+    public void crearPlantillaProducto(Articulo A, char c, int i){
         
         JPanel JArticuloContenedor = new JPanel();
         JArticuloContenedor.setLayout(new GridLayout(1,2));
@@ -66,36 +69,35 @@ public class PrincipalCliente extends javax.swing.JFrame {
         BotonesImg.setLayout(new GridLayout(1,2));
         JButton btnS = new JButton("Siguiente");
         JButton btnA = new JButton("Anterior");  
+        JPanel Img = new JPanel();
+        String imagen = "Imagenes\\"+articulos.get(i).getImagen(0);
+        
+        Img.setLayout(new GridLayout(1,1));
+        JButton imageicon = new JButton();
+        imageicon.setPreferredSize(new Dimension(300,300));
+        //imageicon.setBackground(Color.WHITE);
+        imageicon.setContentAreaFilled(false); //QUITAR FONDO
+        //imageicon.setBorder(null);
+        imageicon.setIcon(new ImageIcon(imagen));
+        Img.add(imageicon);
+        ContenedorIzq.add(Img, BorderLayout.CENTER);
     //LISTENERS BOTONES SIGUIENTE Y ATRAS
         btnS.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //CARGAR SIGUIENTE IMAGEN
+                    imageicon.setIcon(new ImageIcon("Imagenes\\"+articulos.get(i).getImagenSiguiente()));
                 }                
         });
         btnA.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //CARGAR IMAGEN ANTERIOR
+                    imageicon.setIcon(new ImageIcon("Imagenes\\"+articulos.get(i).getImagenAnterior()));
                 }                
         });
         BotonesImg.add(btnA);
         BotonesImg.add(btnS);
         
         ContenedorIzq.add(BotonesImg, BorderLayout.NORTH);
-        
-        JPanel Img = new JPanel();
-        Img.setLayout(new GridLayout(1,1));
-        JButton imageicon = new JButton();
-        imageicon.setPreferredSize(new Dimension(300,300));
-            //imageicon.setBackground(Color.WHITE);
-        imageicon.setContentAreaFilled(false); //QUITAR FONDO
-        //imageicon.setBorder(null);
-        imageicon.setIcon(new ImageIcon("Imagenes/art.png"));
-        Img.add(imageicon);
-        ContenedorIzq.add(Img, BorderLayout.CENTER);
-        
-        
  //CONTENEDOR DERECHO
         //JPanel ContenedorDer = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel ContenedorDer = new JPanel(new GridLayout(5,1));
@@ -117,7 +119,14 @@ public class PrincipalCliente extends javax.swing.JFrame {
         btnAgregar.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //AGREGAR AL CARRITO
+                    int cantidad = Integer.parseInt(JOptionPane.showInputDialog("¿Qué cantidad de "+A.getNombre()+" deseas agregar?"));
+                    if(cantidad>A.getCantidad_Existencias())
+                        JOptionPane.showMessageDialog(null,"Por favor, digita una cantidad adecuada, no hay tantos articulos de los seleccionados en existencia");
+                    else{
+                        A.setCantidad_Existencias(A.getCantidad_Existencias()-cantidad);
+                        articulos.set(i,A);
+                        agregarCarrito(cantidad,A);
+                    }
                 }                
         });
         
@@ -142,11 +151,10 @@ public class PrincipalCliente extends javax.swing.JFrame {
     public void agregarCarrito(int cantidad, Articulo articulo){
         //Preguntar cuantas unidades va a agregar a su carrito, del articulo seleccionado
         //Eliminar las unidades que se agregaron
-        //for para agregar cantidad productos al carrito
+        articulo.setCantidad_Existencias(cantidad);
         carrito.add(articulo);
         
-        
-        crearPlantillaProducto(articulo, 'q');//q: Carrito
+        crearPlantillaProducto(articulo, 'q',0);//q: Carrito
     }
     @SuppressWarnings("unchecked")
     

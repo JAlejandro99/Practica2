@@ -12,10 +12,12 @@ public class Articulo implements Serializable{
     private Calendar inicio_promo;
     private Calendar fin_promo;
     private String[] imagenes;
+    private int posicionImagen;
     
     public Articulo(){
         this.inicio_promo = new GregorianCalendar();
         this.fin_promo = new GregorianCalendar();
+        posicionImagen = 0;
     }
     
     public Articulo(String id, String nombre, float precio, int cantidad_existencias, String[] imagenes){
@@ -28,8 +30,22 @@ public class Articulo implements Serializable{
         this.inicio_promo = new GregorianCalendar();
         //inicio_promo.set(2020,10,10);
         this.fin_promo = new GregorianCalendar();
+        posicionImagen = 0;
     }
-    
+    public String getImagenAnterior(){
+        String ret;
+        if(posicionImagen>0)
+            posicionImagen-=1;
+        ret = imagenes[posicionImagen];
+        return ret;
+    }
+    public String getImagenSiguiente(){
+        String ret;
+        if(posicionImagen<(imagenes.length-1))
+            posicionImagen+=1;
+        ret = imagenes[posicionImagen];
+        return ret;
+    }
     public String getId(){
         return id;
     }

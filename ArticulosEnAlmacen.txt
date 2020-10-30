@@ -3,7 +3,7 @@ Leche
 25.00
 20
 0
-leche.png,leche2.png,
+leche.jpeg,leche2.jpg,
 9837482
 huevo
 45.50
@@ -19,4 +19,4 @@ chocolate
 30
 2020/11/18
 2020/11/20
-chocolate.jpg,choco.png,dulce.jpg,
+chocolate.jpg,choco.jpeg,dulce.jpg,
