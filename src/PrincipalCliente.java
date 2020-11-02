@@ -18,6 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 public class PrincipalCliente extends javax.swing.JFrame {
     
@@ -35,31 +38,42 @@ public class PrincipalCliente extends javax.swing.JFrame {
         clt = new Cliente();
         cargarProductos();
         
-        cargarPlantillaProductos();
-        
+        cargarPlantillaProductos();        
     }
 
     
-    public void cargarProductos(){
-        
+    public void cargarProductos(){      
         
         articulos = clt.pedirArticulos();
         //Mostrar productos
     }
     
+    //Recorre todo el arreglo de ARTICULOS para crear la plantilla de cada Articulo
     public void cargarPlantillaProductos(){
         jPanelContenedor.removeAll();
         for(int i=0; i<articulos.size();i++){
-            crearPlantillaProducto(articulos.get(i), 'c', i);// c: Catalogo
-        }        
+            crearPlantillaProducto(articulos.get(i), i);
+        }
+        jPanelContenedor.updateUI();        
     }
     
-    public void crearPlantillaProducto(Articulo A, char c, int i){
+    //Recorre todo el arreglo del carrito para crear las Plantillas de cada Articulo
+    public void cargarPlantillaCarrito(){
+        jPanelCarrit.removeAll();
+        for(int i=0; i<carrito.size();i++){
+            crearPlantillaProductoCarrito(carrito.get(i), i);
+        }    
+        jPanelContenedor.updateUI();
+    }
+    
+    
+    //Recibe un articulo y su indice en el arreglo de Articulos
+    public void crearPlantillaProducto(Articulo A, int i){
         
         JPanel JArticuloContenedor = new JPanel();
         JArticuloContenedor.setLayout(new GridLayout(1,2));
         JArticuloContenedor.setBackground(Color.red);
-        JArticuloContenedor.setPreferredSize(new Dimension(1000, 500));
+        JArticuloContenedor.setPreferredSize(new Dimension(1300, 500));
   
  //CONTENERDOR IZQUIERDO
         JPanel ContenedorIzq = new JPanel();
@@ -68,9 +82,11 @@ public class PrincipalCliente extends javax.swing.JFrame {
         JPanel BotonesImg = new JPanel();
         BotonesImg.setLayout(new GridLayout(1,2));
         JButton btnS = new JButton("Siguiente");
-        JButton btnA = new JButton("Anterior");  
+        btnS.setFont(new Font("TimesRoman", Font.PLAIN, 30));;
+        JButton btnA = new JButton("Anterior"); 
+        btnA.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         JPanel Img = new JPanel();
-        String imagen = "Imagenes\\"+articulos.get(i).getImagen(0);
+        String imagen = "Imagenes\\"+articulos.get(i).getImagen(0);//WHOOOO!!
         
         Img.setLayout(new GridLayout(1,1));
         JButton imageicon = new JButton();
@@ -100,33 +116,49 @@ public class PrincipalCliente extends javax.swing.JFrame {
         ContenedorIzq.add(BotonesImg, BorderLayout.NORTH);
  //CONTENEDOR DERECHO
         //JPanel ContenedorDer = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel ContenedorDer = new JPanel(new GridLayout(5,1));
+        JPanel ContenedorDer = new JPanel(new GridLayout(6,1));
+        ContenedorDer.setBackground(Color.WHITE);
         
-        JLabel nombreArt = new JLabel("<html><b>"+A.getNombre().toUpperCase()+"</b></html>");
-        nombreArt.setFont(new Font("TimesRoman", Font.PLAIN, 45));
+        JLabel nombreArt = new JLabel(".    "+A.getNombre().toUpperCase()+"");
+        nombreArt.setFont(new Font("Agency FB", Font.BOLD, 45));
         
-        JLabel precioArt = new JLabel("Precio: $ "+A.getPrecio());
-        precioArt.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        JLabel precioArt = new JLabel("+   Precio: $ "+A.getPrecio());
+        precioArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
         
-        JLabel descripArt = new JLabel("Descripcion:  "+A.getPromocion());
-        descripArt.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        JLabel descripArt = new JLabel("+   Descripcion:  "+A.getPromocion());
+        descripArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
         
-        JLabel disponiArt = new JLabel("Disponibles:  "+A.getCantidad_Existencias()+" Articulos.");
-        disponiArt.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        
+        JLabel disponiArt = new JLabel("+   Disponibles:  "+A.getCantidad_Existencias()+" Articulos.");
+        disponiArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
+       
+        JPanel jcantidadnumero = new JPanel(new GridLayout(1,2));
+            JLabel lblcant = new JLabel("+   Cantidad: ");
+            lblcant.setFont(new Font("Agency FB", Font.PLAIN, 45));
+
+            JSpinner Jcantidad = new JSpinner();
+                                      //SpinnerNumberModel(value, min, max, step);
+            SpinnerNumberModel sm = new SpinnerNumberModel(1, 1, A.getCantidad_Existencias(), 1);
+            Jcantidad.setModel(sm);
+            Jcantidad.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+            Jcantidad.setValue(1);
+           jcantidadnumero.add(lblcant);
+           jcantidadnumero.add(Jcantidad);
+           
         JButton btnAgregar = new JButton("Agregar al Carrito");
         btnAgregar.setPreferredSize(new Dimension(400,30));
+        btnAgregar.setFont(new Font("TimesRoman", Font.PLAIN, 35));
         btnAgregar.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    int cantidad = Integer.parseInt(JOptionPane.showInputDialog("¿Qué cantidad de "+A.getNombre()+" deseas agregar?"));
-                    if(cantidad>A.getCantidad_Existencias())
-                        JOptionPane.showMessageDialog(null,"Por favor, digita una cantidad adecuada, no hay tantos articulos de los seleccionados en existencia");
-                    else{
+                    
+                    int cantidad = (Integer) Jcantidad.getValue();
+                   
                         A.setCantidad_Existencias(A.getCantidad_Existencias()-cantidad);
                         articulos.set(i,A);
-                        agregarCarrito(cantidad,A);
-                    }
+                        
+                        agregarCarrito(A,cantidad);
+                    
+                        //VER SI FALTA ALGUNA ACCION AQUI
                 }                
         });
         
@@ -134,27 +166,119 @@ public class PrincipalCliente extends javax.swing.JFrame {
         ContenedorDer.add(precioArt);
         ContenedorDer.add(descripArt);
         ContenedorDer.add(disponiArt);
+        ContenedorDer.add(jcantidadnumero);
         ContenedorDer.add(btnAgregar);
+        
+
+        JArticuloContenedor.add(ContenedorIzq);
+        JArticuloContenedor.add(ContenedorDer);
+        
+        jPanelContenedor.add(JArticuloContenedor);
+    }
+    
+    
+    //Recibe el articulo a agregar y su indice en el arreglo del carrito
+    public void crearPlantillaProductoCarrito(Articulo A, int indice){
+        
+        JPanel JArticuloContenedor = new JPanel();
+        JArticuloContenedor.setLayout(new GridLayout(1,2));
+        JArticuloContenedor.setBackground(Color.red);
+        JArticuloContenedor.setPreferredSize(new Dimension(1300, 500));
+  
+ //CONTENERDOR IZQUIERDO
+        JPanel ContenedorIzq = new JPanel();
+        ContenedorIzq.setLayout(new BorderLayout());
+        
+        JPanel BotonesImg = new JPanel();
+        BotonesImg.setLayout(new GridLayout(1,2));
+        JButton btnS = new JButton("Siguiente");
+        btnS.setFont(new Font("TimesRoman", Font.PLAIN, 30));;
+        JButton btnA = new JButton("Anterior"); 
+        btnA.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        JPanel Img = new JPanel();
+        String imagen = "Imagenes\\"+A.getImagen(0);//WHOOOO!!
+        
+        Img.setLayout(new GridLayout(1,1));
+        JButton imageicon = new JButton();
+        imageicon.setPreferredSize(new Dimension(300,300));
+        imageicon.setContentAreaFilled(false); //QUITAR FONDO
+        imageicon.setIcon(new ImageIcon(imagen));
+        Img.add(imageicon);
+        ContenedorIzq.add(Img, BorderLayout.CENTER);
+    //LISTENERS BOTONES SIGUIENTE Y ATRAS
+        btnS.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    imageicon.setIcon(new ImageIcon("Imagenes\\"+A.getImagenSiguiente()));
+                }                
+        });
+        btnA.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    imageicon.setIcon(new ImageIcon("Imagenes\\"+A.getImagenAnterior()));
+                }                
+        });
+        BotonesImg.add(btnA);
+        BotonesImg.add(btnS);
+        
+        ContenedorIzq.add(BotonesImg, BorderLayout.NORTH);
+ //CONTENEDOR DERECHO
+        //JPanel ContenedorDer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel ContenedorDer = new JPanel(new GridLayout(5,1));
+        ContenedorDer.setBackground(Color.WHITE);
+        
+        JLabel nombreArt = new JLabel(".    "+A.getNombre().toUpperCase()+"");
+        nombreArt.setFont(new Font("Agency FB", Font.BOLD, 45));
+        
+        JLabel precioArt = new JLabel("+   Precio: $ "+A.getPrecio());
+        precioArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
+        
+        JLabel descripArt = new JLabel("+   Descripcion:  "+A.getPromocion());
+        descripArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
+        
+        JLabel disponiArt = new JLabel("+   Seleccionados:  "+A.getCantidad_Existencias()+" Articulos.");
+        disponiArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
+       
+           
+        JButton btnEliminar = new JButton("Eliminar del Carrito");
+        btnEliminar.setPreferredSize(new Dimension(400,30));
+        btnEliminar.setFont(new Font("TimesRoman", Font.PLAIN, 35));
+        btnEliminar.addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                    //PROCESO ELIMINAR DEL CARRITO 
+                    carrito.remove(A);
+                    
+                    //operaciones extra
+                    
+                    cargarPlantillaCarrito();//PROBLEMA AL ELIMINAR UN SOLO CONTENEDOR :/
+                }                
+        });
+        
+        ContenedorDer.add(nombreArt);
+        ContenedorDer.add(precioArt);
+        ContenedorDer.add(descripArt);
+        ContenedorDer.add(disponiArt);
+        ContenedorDer.add(btnEliminar);
         
         
 
         JArticuloContenedor.add(ContenedorIzq);
         JArticuloContenedor.add(ContenedorDer);
         
-        if(c=='c')
-            jPanelContenedor.add(JArticuloContenedor);
-        if(c=='q')
-            jPanelCarrit.add(JArticuloContenedor);
+        jPanelCarrit.add(JArticuloContenedor);//Agregamos al carrito
+        jPanelCarrit.updateUI();
         
     }
     
-    public void agregarCarrito(int cantidad, Articulo articulo){
-        //Preguntar cuantas unidades va a agregar a su carrito, del articulo seleccionado
+    public void agregarCarrito(Articulo articulo, int cantidad){
         //Eliminar las unidades que se agregaron
         articulo.setCantidad_Existencias(cantidad);
         carrito.add(articulo);
+        int indice = carrito.size()-1;//Ultimo agregado al carrito
         
-        crearPlantillaProducto(articulo, 'q',0);//q: Carrito
+        crearPlantillaProductoCarrito(articulo, indice);
     }
     @SuppressWarnings("unchecked")
     
@@ -200,6 +324,7 @@ public class PrincipalCliente extends javax.swing.JFrame {
 
         jPanelCatalo.setLayout(new javax.swing.BoxLayout(jPanelCatalo, javax.swing.BoxLayout.X_AXIS));
 
+        jPanelContenedor.setAlignmentY(1.5F);
         jPanelContenedor.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanelContenedor.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 2, 10));
         jPanelCatalo.add(jPanelContenedor);
