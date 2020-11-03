@@ -61,14 +61,37 @@ public class Articulo implements Serializable{
     public String getPromocion(){
         return promocion;
     }
+    public Calendar getInicio_promo(){
+        return inicio_promo;
+    }
+    public Calendar getFin_promo(){
+        return fin_promo;
+    }
     public String getFechaInicio_promo(){
-        return String.valueOf(inicio_promo.get(Calendar.DATE))+"/"+String.valueOf(inicio_promo.get(Calendar.MONTH)+1)+"/"+String.valueOf(inicio_promo.get(Calendar.YEAR));
+        String date,month;
+        date = String.valueOf(inicio_promo.get(Calendar.DATE));
+        month = String.valueOf(inicio_promo.get(Calendar.MONTH)+1);
+        if(date.length()==1)
+            date = "0"+date;
+        if(month.length()==1)
+            month = "0"+month;
+        return String.valueOf(inicio_promo.get(Calendar.YEAR))+"/"+month+"/"+date;
     }
     public String getFechaFin_promo(){
-        return String.valueOf(fin_promo.get(Calendar.DATE))+"/"+String.valueOf(fin_promo.get(Calendar.MONTH)+1)+"/"+String.valueOf(fin_promo.get(Calendar.YEAR));
+        String date,month;
+        date = String.valueOf(fin_promo.get(Calendar.DATE));
+        month = String.valueOf(fin_promo.get(Calendar.MONTH)+1);
+        if(date.length()==1)
+            date = "0"+date;
+        if(month.length()==1)
+            month = "0"+month;
+        return String.valueOf(fin_promo.get(Calendar.YEAR))+"/"+month+"/"+date;
     }
     public String getImagen(int i){
         return imagenes[i];
+    }
+    public String[] getImagenes(){
+        return imagenes;
     }
     public void setId(String id){
         this.id=id;
@@ -85,13 +108,19 @@ public class Articulo implements Serializable{
     public void setPromocion(String promocion){
         this.promocion=promocion;
     }
-    public void setInicio_promo(int Y, int M, int D){
+    public void setFechaInicio_promo(int Y, int M, int D){
         this.inicio_promo.set(Y,M,D);
     }
-    public void setFin_promo(int Y, int M, int D){
+    public void setInicio_promo(Calendar inicio_promo){
+        inicio_promo = inicio_promo;
+    }
+    public void setFechaFin_promo(int Y, int M, int D){
         this.fin_promo.set(Y,M,D);
     }
-    public void setImagen(String[] imagenes){
+    public void setFin_promo(Calendar fin_promo){
+        this.fin_promo = fin_promo;
+    }
+    public void setImagenes(String[] imagenes){
         this.imagenes = imagenes;
     }
 }

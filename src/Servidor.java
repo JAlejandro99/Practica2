@@ -1,21 +1,36 @@
-
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.Document;
 
 public class Servidor {
     static ObjectOutputStream enviar;
     static ObjectInputStream recibir;
+    static String ruta_archivos;
     public static void main(String[] args) {
         try{
             ServerSocket ss = new ServerSocket(3000);
             System.out.println("Servidor iniciado");
+            File f = new File("");
+            String ruta = f.getAbsolutePath();
+            String carpeta="ImagenesAdministrador";
+            ruta_archivos = ruta+"\\"+carpeta+"\\";
+            System.out.println("ruta:"+ruta_archivos);
+            File f2 = new File(ruta_archivos);
+            f2.mkdirs();//Haces la dirección, mkdir te hace un nivel de directorio, el mkdirs te hace todas las estructuras de directorio, aquí se pudo haber ocupado solo mkdir
+            f2.setWritable(true);
             for(;;){
                 boolean terminar = false;
                 char opcion = 0;
@@ -29,6 +44,12 @@ public class Servidor {
                         case 'p':
                             enviarArticulos();
                             break;
+                        case 'i':
+                            enviarImagenes();
+                            break;
+                        case 'c':
+                            procesarCompra();
+                            break;
                         case 's':
                             terminar = true;
                             recibir.close();
@@ -40,6 +61,47 @@ public class Servidor {
                 }
             }//for   
         }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    static void enviarImagenes(){
+        try{
+            File f2 = new File(ruta_archivos);
+            File[] f = f2.listFiles();
+            int aux = f.length,l,porcentaje;
+            String nombre;
+            String path;
+            long tam, enviados;
+            enviar.writeInt(aux);
+            enviar.flush();
+            for(int i=0;i<aux;i++){
+                //System.out.println("Archivo "+nombre[i]+"; path: "+path[i]+"; tamano: "+tam[i]+";");
+                nombre = f[i].getName();
+                path = f[i].getAbsolutePath();
+                tam = f[i].length();
+                System.out.println("\nPreparandose pare enviar archivo "+path+" de "+tam+" bytes");
+                DataInputStream dis = new DataInputStream(new FileInputStream(path));
+                enviar.writeUTF(nombre);
+                enviar.flush();
+                enviar.writeLong(tam);
+                enviar.flush();
+                enviados = 0;
+                l=0;
+                porcentaje=0;
+                while(enviados<tam){
+                    byte[] b = new byte[1500];
+                    l=dis.read(b);
+                    //System.out.print("\nEnviados: "+l);
+                    enviar.write(b,0,l);
+                    enviar.flush();
+                    enviados = enviados + l;
+                    porcentaje = (int)((enviados*100)/tam);
+                    //System.out.print(", enviado el "+porcentaje+" % del archivo "+nombre[i]);
+                }//while
+                System.out.println("Archivo "+nombre+" enviado...");
+                dis.close();
+            }
+        }catch(IOException e){
             e.printStackTrace();
         }
     }
@@ -77,11 +139,11 @@ public class Servidor {
                 art.setPromocion(almacenamiento.readLine());
                 if(!art.getPromocion().equals("0")){
                     fecha = getFecha(almacenamiento.readLine());
-                    art.setInicio_promo(fecha[0],fecha[1],fecha[2]);
+                    art.setFechaInicio_promo(fecha[0],fecha[1],fecha[2]);
                     fecha = getFecha(almacenamiento.readLine());
-                    art.setFin_promo(fecha[0],fecha[1],fecha[2]);
+                    art.setFechaFin_promo(fecha[0],fecha[1],fecha[2]);
                 }
-                art.setImagen(leerCadenas(almacenamiento.readLine()));
+                art.setImagenes(leerCadenas(almacenamiento.readLine()));
                 articulos.add(art);
                 cadena = almacenamiento.readLine();
                 if(cadena==null)
@@ -114,5 +176,127 @@ public class Servidor {
             cadenasret[i] = cadenas.get(i);
         }
         return cadenasret;
+    }
+    static void procesarCompra(){
+        ArrayList<Articulo> articulos = new ArrayList<Articulo>();
+        try{
+            int totalArticulos = recibir.readInt();
+            for(int i=0;i<totalArticulos;i++){
+                Articulo art = (Articulo) recibir.readObject();
+                articulos.add(art);
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        eliminarArticulosInventario(articulos);
+        String nombreTicket = generarTicket(articulos);
+        enviarTicket(nombreTicket);
+    }
+    static void enviarTicket(String nombreTicket){
+        try{
+            File f = new File(ruta_archivos+nombreTicket);
+            int l,porcentaje;
+            String nombre;
+            String path;
+            long tam, enviados;
+            //System.out.println("Archivo "+nombre[i]+"; path: "+path[i]+"; tamano: "+tam[i]+";");
+            nombre = f.getName();
+            path = f.getAbsolutePath();
+            tam = f.length();
+            System.out.println("\nPreparandose pare enviar archivo "+path+" de "+tam+" bytes");
+            DataInputStream dis = new DataInputStream(new FileInputStream(path));
+            enviar.writeUTF(nombre);
+            enviar.flush();
+            enviar.writeLong(tam);
+            enviar.flush();
+            enviados = 0;
+            l=0;
+            porcentaje=0;
+            while(enviados<tam){
+                byte[] b = new byte[1500];
+                l=dis.read(b);
+                //System.out.print("\nEnviados: "+l);
+                enviar.write(b,0,l);
+                enviar.flush();
+                enviados = enviados + l;
+                porcentaje = (int)((enviados*100)/tam);
+                //System.out.print(", enviado el "+porcentaje+" % del archivo "+nombre[i]);
+            }//while
+            System.out.println("Archivo "+nombre+" enviado...");
+            dis.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+    static void eliminarArticulosInventario(ArrayList<Articulo> articulos){
+        ArrayList<Articulo> articulosViejo = leerArticulos();
+        for(int i=0;i<articulosViejo.size();i++){
+            for(int j=0;j<articulos.size();j++){
+                if(articulosViejo.get(i).getId().equals(articulos.get(j).getId()))
+                    articulosViejo.get(i).setCantidad_Existencias(articulosViejo.get(i).getCantidad_Existencias()-articulos.get(j).getCantidad_Existencias());
+            }
+        }
+        guardarArticulosInventario(articulosViejo);
+    }
+    static void guardarArticulosInventario(ArrayList<Articulo> articulos){
+        try{
+            File f = new File("ArticulosEnAlmacen.txt");
+            PrintWriter pw = new PrintWriter(f);
+            f.createNewFile();
+            int[] fecha;
+            for(int i=0;i<articulos.size();i++){
+                Articulo art = articulos.get(i);
+                pw.println(art.getId());
+                pw.println(art.getNombre());
+                pw.println(String.valueOf(art.getPrecio()));
+                pw.println(String.valueOf(art.getCantidad_Existencias()));
+                pw.println(art.getPromocion());
+                if(!art.getPromocion().equals("0")){
+                    pw.println(art.getFechaInicio_promo());
+                    pw.println(art.getFechaFin_promo());
+                }
+                for(int j=0;j<art.getImagenes().length;j++){
+                    pw.print(art.getImagen(j)+",");
+                }
+                pw.println();
+            }
+            pw.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+    static String generarTicket(ArrayList<Articulo> articulos){
+        String ticket="ticket.txt";
+        try{
+            File f = new File(ruta_archivos+ticket);
+            PrintWriter pw = new PrintWriter(f);
+            float total = 0;
+            String p;
+            f.createNewFile();
+            Calendar fechaCompra = Calendar.getInstance();
+            pw.println("Número de ticket: 10");
+            pw.println("Fecha de compra: "+String.valueOf(fechaCompra.get(Calendar.DATE))+"/"+String.valueOf(fechaCompra.get(Calendar.MONTH)+1)+"/"+String.valueOf(fechaCompra.get(Calendar.YEAR)));
+            pw.println();
+            pw.println("Id    /Producto  /Cantidad  /Precio");
+            for(int i=0;i<articulos.size();i++){
+                Articulo art = articulos.get(i);
+                p = String.valueOf(art.getPrecio());
+                if(p.charAt(p.length()-2)=='.')
+                    p=p+"0";
+                pw.println(art.getId()+"    "+art.getNombre()+"    "+String.valueOf(art.getCantidad_Existencias())+"    $"+p);
+                total = total+art.getCantidad_Existencias()*art.getPrecio();
+            }
+            pw.println();
+            p = String.valueOf(total);
+            if(p.charAt(p.length()-2)=='.')
+                    p=p+"0";
+            pw.println("Total:    $"+p);
+            pw.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return ticket;
     }
 }

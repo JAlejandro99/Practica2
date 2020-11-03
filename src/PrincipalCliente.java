@@ -1,4 +1,3 @@
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,38 +31,48 @@ public class PrincipalCliente extends javax.swing.JFrame {
         initComponents();
 
         jPanelContenedor.setPreferredSize(new Dimension(100, 5000));
-                
         articulos = new ArrayList<Articulo>();
         carrito = new ArrayList<Articulo>();
         clt = new Cliente();
         cargarProductos();
-        
-        cargarPlantillaProductos();        
     }
 
     
-    public void cargarProductos(){      
-        
+    public void cargarProductos(){    
+        articulos.clear();
         articulos = clt.pedirArticulos();
-        //Mostrar productos
+        clt.pedirImagenes();
+        cargarPlantillaProductos();
+        cargarPlantillaCarrito();
     }
     
     //Recorre todo el arreglo de ARTICULOS para crear la plantilla de cada Articulo
     public void cargarPlantillaProductos(){
         jPanelContenedor.removeAll();
         for(int i=0; i<articulos.size();i++){
-            crearPlantillaProducto(articulos.get(i), i);
+            if(articulos.get(i).getCantidad_Existencias()>0)
+                crearPlantillaProducto(articulos.get(i), i);
         }
-        jPanelContenedor.updateUI();        
+        jPanelContenedor.updateUI();
     }
-    
+    public String totalCarrito(){
+        float total=(float) 0.00;
+        String ret;
+        for(int i=0;i<carrito.size();i++)
+            total+=carrito.get(i).getPrecio()*carrito.get(i).getCantidad_Existencias();
+        ret = String.valueOf(total);
+        if(ret.charAt(ret.length()-2)=='.')
+            ret = ret+"0";
+        return ret;
+    }
     //Recorre todo el arreglo del carrito para crear las Plantillas de cada Articulo
     public void cargarPlantillaCarrito(){
         jPanelCarrit.removeAll();
         for(int i=0; i<carrito.size();i++){
             crearPlantillaProductoCarrito(carrito.get(i), i);
-        }    
-        jPanelContenedor.updateUI();
+        }
+        jLabelTotal.setText(totalCarrito());
+        jPanelCarrit.updateUI();
     }
     
     
@@ -122,7 +131,10 @@ public class PrincipalCliente extends javax.swing.JFrame {
         JLabel nombreArt = new JLabel(".    "+A.getNombre().toUpperCase()+"");
         nombreArt.setFont(new Font("Agency FB", Font.BOLD, 45));
         
-        JLabel precioArt = new JLabel("+   Precio: $ "+A.getPrecio());
+        String p = String.valueOf(A.getPrecio());
+        if(p.charAt(p.length()-2)=='.')
+            p=p+"0";
+        JLabel precioArt = new JLabel("+   Precio: $ "+p);
         precioArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
         
         JLabel descripArt = new JLabel("+   Descripcion:  "+A.getPromocion());
@@ -150,15 +162,9 @@ public class PrincipalCliente extends javax.swing.JFrame {
         btnAgregar.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    
                     int cantidad = (Integer) Jcantidad.getValue();
-                   
-                        A.setCantidad_Existencias(A.getCantidad_Existencias()-cantidad);
-                        articulos.set(i,A);
-                        
-                        agregarCarrito(A,cantidad);
-                    
-                        //VER SI FALTA ALGUNA ACCION AQUI
+                    agregarCarrito(A,cantidad);
+                    //VER SI FALTA ALGUNA ACCION AQUI
                 }                
         });
         
@@ -229,8 +235,10 @@ public class PrincipalCliente extends javax.swing.JFrame {
         
         JLabel nombreArt = new JLabel(".    "+A.getNombre().toUpperCase()+"");
         nombreArt.setFont(new Font("Agency FB", Font.BOLD, 45));
-        
-        JLabel precioArt = new JLabel("+   Precio: $ "+A.getPrecio());
+        String p = String.valueOf(A.getPrecio());
+        if(p.charAt(p.length()-2)=='.')
+            p=p+"0";
+        JLabel precioArt = new JLabel("+   Precio: $ "+p);
         precioArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
         
         JLabel descripArt = new JLabel("+   Descripcion:  "+A.getPromocion());
@@ -246,14 +254,11 @@ public class PrincipalCliente extends javax.swing.JFrame {
         btnEliminar.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    
-                    //PROCESO ELIMINAR DEL CARRITO 
-                    carrito.remove(A);
-                    
-                    //operaciones extra
-                    
-                    cargarPlantillaCarrito();//PROBLEMA AL ELIMINAR UN SOLO CONTENEDOR :/
-                }                
+                    int cantidad = Integer.valueOf(JOptionPane.showInputDialog("Ingresa el número de articulos que quieres eliminar de tu carrito."));
+                    if(cantidad>A.getCantidad_Existencias())
+                        cantidad = A.getCantidad_Existencias();
+                    eliminardeCarrito(indice,cantidad);
+                }
         });
         
         ContenedorDer.add(nombreArt);
@@ -271,14 +276,42 @@ public class PrincipalCliente extends javax.swing.JFrame {
         jPanelCarrit.updateUI();
         
     }
+    public void eliminardeCarrito(int indice, int cantidad){
+        if(cantidad==carrito.get(indice).getCantidad_Existencias())
+            carrito.remove(indice);
+        else{
+            Articulo art = carrito.get(indice);
+            art.setCantidad_Existencias(carrito.get(indice).getCantidad_Existencias()-cantidad);
+            carrito.set(indice,art);
+        }
+        cargarPlantillaCarrito();
+    }
     
-    public void agregarCarrito(Articulo articulo, int cantidad){
+    public void agregarCarrito(Articulo A, int cantidad){
         //Eliminar las unidades que se agregaron
-        articulo.setCantidad_Existencias(cantidad);
-        carrito.add(articulo);
-        int indice = carrito.size()-1;//Ultimo agregado al carrito
-        
-        crearPlantillaProductoCarrito(articulo, indice);
+        Articulo Atemp = new Articulo();
+        boolean auxiliar=false;
+        Atemp.setId(A.getId());
+        Atemp.setPrecio(A.getPrecio());
+        Atemp.setNombre(A.getNombre());
+        Atemp.setCantidad_Existencias(cantidad);
+        Atemp.setPromocion(A.getPromocion());
+        Atemp.setImagenes(A.getImagenes());
+        Atemp.setInicio_promo(A.getInicio_promo());
+        Atemp.setFin_promo(A.getFin_promo());
+        for(int i=0;i<carrito.size();i++){
+            if(carrito.get(i).getNombre().equals(Atemp.getNombre())){
+                Atemp.setCantidad_Existencias(carrito.get(i).getCantidad_Existencias()+Atemp.getCantidad_Existencias());
+                if(Atemp.getCantidad_Existencias()>A.getCantidad_Existencias())
+                    JOptionPane.showMessageDialog(null,"La tienda no cuenta con suficientes productos, por favor, vuelve a ingresar un número coherente de productos","Error",JOptionPane.INFORMATION_MESSAGE);
+                else
+                    carrito.set(i,Atemp);
+                auxiliar = true;
+            }
+        }
+        if(!auxiliar)
+            carrito.add(Atemp);
+        cargarPlantillaCarrito();
     }
     @SuppressWarnings("unchecked")
     
@@ -459,11 +492,15 @@ public class PrincipalCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_salirActionPerformed
 
     private void finalizarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarCompraActionPerformed
-        boolean b = clt.comprar(carrito);
-        if(b)
-        System.out.println("Compra Exitosa");
-        else
-        System.out.println("Ha habido un error al procesar su compra, por favor, intentelo mas tarde");
+        String ticket = clt.comprar(carrito);
+        if(!ticket.equals("")){
+            System.out.println("Compra Exitosa"+ticket);
+            carrito.clear();
+        }else
+            System.out.println("Ha habido un error al procesar su compra, por favor, intentelo mas tarde");
+        cargarProductos();
+        Ticket tk = new Ticket(clt.getRuta_archivos()+ticket);
+        tk.setVisible(true);
         //Actualizar el listado de productos pidiendo nuevamente los productos que se tienen en la tienda
     }//GEN-LAST:event_finalizarCompraActionPerformed
 
