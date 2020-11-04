@@ -1,22 +1,46 @@
-1924234
-Leche
-25.0
-20
+00000000
+Lenovo Ideal Pad S340
+22399.0
+17
 0
-leche.jpeg,leche2.jpg,
-9837482
-huevo
-45.5
-30
+LenovoIdealPadCorei7-1.jpg,LenovoIdealPadCorei7-2.jpg,LenovoIdealPadCorei7-3.jpg,LenovoIdealPadCorei7-4.jpg,
+00000001
+HP Laptop 15-dy1002la
+16999.0
+20
 10
-2021/08/03
-2021/08/09
-huevo.jpg,
-209384
-chocolate
-34.0
-25
+2023/10/03
+2023/10/09
+HP15-d1002la-1.jpg,HP15-d1002la-2.jpg,HP15-d1002la-3.jpg,
+00000002
+Lenovo IDEACENTRE 330 20IGM
+9298.8
 30
-2021/09/18
-2021/09/20
-chocolate.jpg,choco.jpeg,dulce.jpg,
+30
+2023/11/18
+2023/11/20
+Lenovo IDEACENTRE 330-20IGM-1.jpg,
+00000003
+Gigabyte GV-R55XTOC-8GD,Negro
+5530.83
+50
+0
+Gigabyte GV-R55XTOC-8GD-1.jpg,Gigabyte GV-R55XTOC-8GD-2.jpg,Gigabyte GV-R55XTOC-8GD-3.jpg,Gigabyte GV-R55XTOC-8GD-4.jpg,Gigabyte GV-R55XTOC-8GD-5.jpg,Gigabyte GV-R55XTOC-8GD-6.jpg,Gigabyte GV-R55XTOC-8GD-7.jpg,Gigabyte GV-R55XTOC-8GD-8.jpg,
+00000004
+Seagate ST1000DM010 Barracuda-Disco Duro Interno, 1TB, 3.5"
+1039.0
+70
+0
+Seagate1TB-1.jpg,Seagate1TB-2.jpg,Seagate1TB-3.jpg,Seagate1TB-4.jpg,Seagate1TB-5.jpg,Seagate1TB-6.jpg,
+00000005
+Microsoft P58-00061 MOUMSF030 Mouse Optical Basic, Negro, 3 Botones, Usb, Óptico
+199.0
+80
+0
+Microsoft P58-00061-1.jpg,Microsoft P58-00061-2.jpg,Microsoft P58-00061-3.jpg,Microsoft P58-00061-4.jpg,Microsoft P58-00061-5.jpg,Microsoft P58-00061-6.jpg,
+00000006
+Samsung LC24F390FHLXZX - Monitor Curvo, Negro (Black High Glossy), 23.5”
+3247.79
+300
+0
+SamsungMonitor-1.jpg,SamsungMonitor-2.jpg,SamsungMonitor-3.jpg,SamsungMonitor-4.jpg,SamsungMonitor-5.jpg,SamsungMonitor-6.jpg,SamsungMonitor-7.jpg,SamsungMonitor-8.jpg,SamsungMonitor-9.jpg,SamsungMonitor-10.jpg,SamsungMonitor-11.jpg,SamsungMonitor-12.jpg,

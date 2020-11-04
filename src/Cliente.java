@@ -14,36 +14,42 @@ public class Cliente {
     private ObjectInputStream recibir;
     private ObjectOutputStream enviar;
     Socket cl;
-    String ruta_archivos;
+    String ruta_archivos,ruta_archivos2;
     
     public Cliente(){
+        File f = new File("");
+        String ruta = f.getAbsolutePath();
+        String carpeta="Imagenes";
+        ruta_archivos = ruta+"\\"+carpeta+"\\";
+        ruta_archivos2 = ruta+"\\Tickets\\";
+        System.out.println("ruta Imagenes:"+ruta_archivos);
+        File f2 = new File(ruta_archivos);
+        f2.mkdirs();//Haces la dirección, mkdir te hace un nivel de directorio, el mkdirs te hace todas las estructuras de directorio, aquí se pudo haber ocupado solo mkdir
+        f2.setWritable(true);
+        System.out.println("ruta Tickets:"+ruta_archivos2);
+        File f3 = new File(ruta_archivos2);
+        f3.mkdirs();//Haces la dirección, mkdir te hace un nivel de directorio, el mkdirs te hace todas las estructuras de directorio, aquí se pudo haber ocupado solo mkdir
+        f3.setWritable(true);
+    }
+    public void iniciarConexion(){
         try {
             cl = new Socket("localhost", 3000);
             System.out.println("Conexion con servidor exitosa...");
             enviar = new ObjectOutputStream(cl.getOutputStream());
             recibir = new ObjectInputStream(cl.getInputStream());
-            File f = new File("");
-            String ruta = f.getAbsolutePath();
-            String carpeta="Imagenes";
-            ruta_archivos = ruta+"\\"+carpeta+"\\";
-            System.out.println("ruta:"+ruta_archivos);
-            File f2 = new File(ruta_archivos);
-            f2.mkdirs();//Haces la dirección, mkdir te hace un nivel de directorio, el mkdirs te hace todas las estructuras de directorio, aquí se pudo haber ocupado solo mkdir
-            f2.setWritable(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     public void salir(){
         try{
-            enviar.writeChar('s');
-            enviar.flush();
             cl.close();
         }catch(IOException e){
             e.printStackTrace();
         }
     }
     public ArrayList<Articulo> pedirArticulos(){
+        iniciarConexion();
         ArrayList<Articulo> articulos = new ArrayList<Articulo>();
         try{
             enviar.writeChar('p');
@@ -58,9 +64,11 @@ public class Cliente {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+        salir();
         return articulos;
     }
     public void pedirImagenes(){
+        iniciarConexion();
         try{
             int l,porcentaje,aux;
             long recibidos,tam;
@@ -92,8 +100,10 @@ public class Cliente {
         }catch(IOException e){
             e.printStackTrace();
         }
+        salir();
     }
     public String comprar(ArrayList<Articulo> articulos){
+        iniciarConexion();
         String ret = "";
         try{
             int totalArticulos;
@@ -114,7 +124,7 @@ public class Cliente {
             ret = nombre;
             tam = recibir.readLong();
             System.out.println("\nComienza descarga del archivo "+nombre+" de "+tam+" bytes");
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream(ruta_archivos+"\\"+nombre));
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream(ruta_archivos2+"\\"+nombre));
             recibidos=0;
             l=0;
             porcentaje=0;//l es para saber cuandos bytes se leyeron en el Socket
@@ -133,9 +143,10 @@ public class Cliente {
         }catch(IOException e){
             e.printStackTrace();
         }
+        salir();
         return ret;
     }
-    public String getRuta_archivos(){
-        return this.ruta_archivos;
+    public String getRuta_archivos2(){
+        return this.ruta_archivos2;
     }
 }

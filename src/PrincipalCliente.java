@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
@@ -26,22 +27,34 @@ public class PrincipalCliente extends javax.swing.JFrame {
     private Cliente clt;
     private ArrayList<Articulo> articulos;
     private ArrayList<Articulo> carrito;
+    private boolean inicio;
     
     public PrincipalCliente() {
         initComponents();
-
         jPanelContenedor.setPreferredSize(new Dimension(100, 5000));
         articulos = new ArrayList<Articulo>();
         carrito = new ArrayList<Articulo>();
         clt = new Cliente();
+        inicio = true;
+        File f = new File(clt.getRuta_archivos2());
+        File[] f2 = f.listFiles();
+        if(f2.length>0){
+            for(int i=0;i<f2.length;i++){
+                this.verTicket.addItem(f2[i].getName());
+            }
+        }
         cargarProductos();
     }
-
-    
-    public void cargarProductos(){    
+    public void cargarProductos(){
         articulos.clear();
         articulos = clt.pedirArticulos();
         clt.pedirImagenes();
+        cargarPlantillaProductos();
+        cargarPlantillaCarrito();
+    }
+    public void cargarProductos2(){
+        articulos.clear();
+        articulos = clt.pedirArticulos();
         cargarPlantillaProductos();
         cargarPlantillaCarrito();
     }
@@ -63,6 +76,11 @@ public class PrincipalCliente extends javax.swing.JFrame {
         ret = String.valueOf(total);
         if(ret.charAt(ret.length()-2)=='.')
             ret = ret+"0";
+        if(ret.length()>6){
+            ret = ret.substring(0,ret.length()-6)+","+ret.substring(ret.length()-6);
+            if(ret.length()>10)
+                ret = ret.substring(0,ret.length()-10)+","+ret.substring(ret.length()-10);
+        }
         return ret;
     }
     //Recorre todo el arreglo del carrito para crear las Plantillas de cada Articulo
@@ -131,10 +149,7 @@ public class PrincipalCliente extends javax.swing.JFrame {
         JLabel nombreArt = new JLabel(".    "+A.getNombre().toUpperCase()+"");
         nombreArt.setFont(new Font("Agency FB", Font.BOLD, 45));
         
-        String p = String.valueOf(A.getPrecio());
-        if(p.charAt(p.length()-2)=='.')
-            p=p+"0";
-        JLabel precioArt = new JLabel("+   Precio: $ "+p);
+        JLabel precioArt = new JLabel("+   Precio: $ "+A.getPrecioComas());
         precioArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
         
         JLabel descripArt = new JLabel("+   Descripcion:  "+A.getPromocion());
@@ -235,10 +250,8 @@ public class PrincipalCliente extends javax.swing.JFrame {
         
         JLabel nombreArt = new JLabel(".    "+A.getNombre().toUpperCase()+"");
         nombreArt.setFont(new Font("Agency FB", Font.BOLD, 45));
-        String p = String.valueOf(A.getPrecio());
-        if(p.charAt(p.length()-2)=='.')
-            p=p+"0";
-        JLabel precioArt = new JLabel("+   Precio: $ "+p);
+        
+        JLabel precioArt = new JLabel("+   Precio: $ "+A.getPrecioComas());
         precioArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
         
         JLabel descripArt = new JLabel("+   Descripcion:  "+A.getPromocion());
@@ -335,6 +348,7 @@ public class PrincipalCliente extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabelTotal = new javax.swing.JLabel();
+        verTicket = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -406,6 +420,14 @@ public class PrincipalCliente extends javax.swing.JFrame {
         jLabelTotal.setFont(new java.awt.Font("Tahoma", 1, 32)); // NOI18N
         jLabelTotal.setText("1000.0");
 
+        verTicket.setFont(new java.awt.Font("Tahoma", 0, 30)); // NOI18N
+        verTicket.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        verTicket.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verTicketActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelCarritoLayout = new javax.swing.GroupLayout(jPanelCarrito);
         jPanelCarrito.setLayout(jPanelCarritoLayout);
         jPanelCarritoLayout.setHorizontalGroup(
@@ -422,6 +444,8 @@ public class PrincipalCliente extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabelTotal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(verTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(69, 69, 69)
                                 .addComponent(finalizarCompra)))
                         .addGap(50, 50, 50))
                     .addGroup(jPanelCarritoLayout.createSequentialGroup()
@@ -439,8 +463,9 @@ public class PrincipalCliente extends javax.swing.JFrame {
                 .addGroup(jPanelCarritoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(finalizarCompra, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jLabelTotal))
-                .addContainerGap(40, Short.MAX_VALUE))
+                    .addComponent(jLabelTotal)
+                    .addComponent(verTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("CARRITO DE COMPRAS", jPanelCarrito);
@@ -487,22 +512,35 @@ public class PrincipalCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
-        clt.salir();
         System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
 
     private void finalizarCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarCompraActionPerformed
-        String ticket = clt.comprar(carrito);
-        if(!ticket.equals("")){
-            System.out.println("Compra Exitosa"+ticket);
-            carrito.clear();
-        }else
-            System.out.println("Ha habido un error al procesar su compra, por favor, intentelo mas tarde");
-        cargarProductos();
-        Ticket tk = new Ticket(clt.getRuta_archivos()+ticket);
-        tk.setVisible(true);
-        //Actualizar el listado de productos pidiendo nuevamente los productos que se tienen en la tienda
+        if(carrito.isEmpty()){
+            JOptionPane.showMessageDialog(null,"No hay articulos en tu carrito de compras, lo sentimos.","Carrito vacio",JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            String ticket = clt.comprar(carrito);
+            if(!ticket.equals("")){
+                System.out.println("Compra Exitosa"+ticket);
+                carrito.clear();
+            }else
+                System.out.println("Ha habido un error al procesar su compra, por favor, intentelo mas tarde");
+            cargarProductos2();
+            Ticket tk = new Ticket(clt.getRuta_archivos2()+ticket);
+            tk.setVisible(true);
+            this.verTicket.addItem(ticket);
+            //Actualizar el listado de productos pidiendo nuevamente los productos que se tienen en la tienda
+        }
     }//GEN-LAST:event_finalizarCompraActionPerformed
+
+    private void verTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verTicketActionPerformed
+        if(!inicio){
+            String cadena = (String)verTicket.getSelectedItem();
+            Ticket tk = new Ticket(clt.getRuta_archivos2()+cadena);
+            tk.setVisible(true);
+        }else
+            inicio = false;
+    }//GEN-LAST:event_verTicketActionPerformed
 
     /**
      * @param args the command line arguments
@@ -554,5 +592,6 @@ public class PrincipalCliente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton salir;
+    private javax.swing.JComboBox<String> verTicket;
     // End of variables declaration//GEN-END:variables
 }

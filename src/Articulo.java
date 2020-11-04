@@ -55,6 +55,17 @@ public class Articulo implements Serializable{
     public float getPrecio(){
         return precio;
     }
+    public String getPrecioComas(){
+        String ret = String.valueOf(precio);
+        if(ret.charAt(ret.length()-2)=='.')
+            ret+="0";
+        if(ret.length()>6){
+            ret = ret.substring(0,ret.length()-6)+","+ret.substring(ret.length()-6);
+            if(ret.length()>10)
+                ret = ret.substring(0,ret.length()-10)+","+ret.substring(ret.length()-10);
+        }
+        return ret;
+    }
     public int getCantidad_Existencias(){
         return cantidad_existencias;
     }

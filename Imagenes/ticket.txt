@@ -1,8 +1,0 @@
-Número de ticket: 10
-Fecha de compra: 3/11/2020
-
-Id    /Producto  /Cantidad  /Precio
-1924234    Leche    1    $25.00
-9837482    huevo    2    $45.50
-
-Total:    $116.00

@@ -18,7 +18,7 @@ import javax.swing.text.Document;
 public class Servidor {
     static ObjectOutputStream enviar;
     static ObjectInputStream recibir;
-    static String ruta_archivos;
+    static String ruta_archivos,ruta_archivos2;
     public static void main(String[] args) {
         try{
             ServerSocket ss = new ServerSocket(3000);
@@ -27,38 +27,37 @@ public class Servidor {
             String ruta = f.getAbsolutePath();
             String carpeta="ImagenesAdministrador";
             ruta_archivos = ruta+"\\"+carpeta+"\\";
-            System.out.println("ruta:"+ruta_archivos);
+            ruta_archivos2 = ruta+"\\TicketsAdministrador\\";
+            System.out.println("ruta Imagenes:"+ruta_archivos);
             File f2 = new File(ruta_archivos);
             f2.mkdirs();//Haces la dirección, mkdir te hace un nivel de directorio, el mkdirs te hace todas las estructuras de directorio, aquí se pudo haber ocupado solo mkdir
             f2.setWritable(true);
+            System.out.println("ruta Tickets:"+ruta_archivos2);
+            File f3 = new File(ruta_archivos2);
+            f3.mkdirs();//Haces la dirección, mkdir te hace un nivel de directorio, el mkdirs te hace todas las estructuras de directorio, aquí se pudo haber ocupado solo mkdir
+            f3.setWritable(true);
             for(;;){
-                boolean terminar = false;
                 char opcion = 0;
                 Socket cl = ss.accept();
                 recibir = new ObjectInputStream(cl.getInputStream());
                 enviar = new ObjectOutputStream(cl.getOutputStream());
                 System.out.println("Cliente conectado...");
-                while(terminar==false){
-                    opcion = recibir.readChar();
-                    switch(opcion){
-                        case 'p':
-                            enviarArticulos();
-                            break;
-                        case 'i':
-                            enviarImagenes();
-                            break;
-                        case 'c':
-                            procesarCompra();
-                            break;
-                        case 's':
-                            terminar = true;
-                            recibir.close();
-                            enviar.close();
-                            cl.close();
-                            System.out.println("Conexion cerrada.");
-                            break;
+                opcion = recibir.readChar();
+                switch(opcion){
+                    case 'p':
+                        enviarArticulos();
+                        break;
+                    case 'i':
+                        enviarImagenes();
+                        break;
+                    case 'c':
+                        procesarCompra();
+                        break;
                     }
-                }
+                recibir.close();
+                enviar.close();
+                cl.close();
+                System.out.println("Conexion cerrada.");
             }//for   
         }catch(Exception e){
             e.printStackTrace();
@@ -196,7 +195,7 @@ public class Servidor {
     }
     static void enviarTicket(String nombreTicket){
         try{
-            File f = new File(ruta_archivos+nombreTicket);
+            File f = new File(ruta_archivos2+nombreTicket);
             int l,porcentaje;
             String nombre;
             String path;
@@ -268,31 +267,36 @@ public class Servidor {
         }
     }
     static String generarTicket(ArrayList<Articulo> articulos){
-        String ticket="ticket.txt";
+        String ticket;
+        File fAux = new File(ruta_archivos2);
+        File[] fAux2 = fAux.listFiles();
+        ticket="ticket"+String.valueOf(fAux2.length+1)+".txt";
         try{
-            File f = new File(ruta_archivos+ticket);
+            File f = new File(ruta_archivos2+ticket);
             PrintWriter pw = new PrintWriter(f);
             float total = 0;
             String p;
             f.createNewFile();
             Calendar fechaCompra = Calendar.getInstance();
-            pw.println("Número de ticket: 10");
+            pw.println("Número de ticket: "+String.valueOf(fAux2.length+1));
             pw.println("Fecha de compra: "+String.valueOf(fechaCompra.get(Calendar.DATE))+"/"+String.valueOf(fechaCompra.get(Calendar.MONTH)+1)+"/"+String.valueOf(fechaCompra.get(Calendar.YEAR)));
             pw.println();
-            pw.println("Id    /Producto  /Cantidad  /Precio");
+            pw.println("Id      /Producto    /Cantidad    /Precio");
             for(int i=0;i<articulos.size();i++){
                 Articulo art = articulos.get(i);
-                p = String.valueOf(art.getPrecio());
-                if(p.charAt(p.length()-2)=='.')
-                    p=p+"0";
-                pw.println(art.getId()+"    "+art.getNombre()+"    "+String.valueOf(art.getCantidad_Existencias())+"    $"+p);
+                pw.println(art.getId()+"      "+art.getNombre()+"      "+String.valueOf(art.getCantidad_Existencias())+"      $"+String.valueOf(art.getPrecioComas()));
                 total = total+art.getCantidad_Existencias()*art.getPrecio();
             }
             pw.println();
             p = String.valueOf(total);
             if(p.charAt(p.length()-2)=='.')
                     p=p+"0";
-            pw.println("Total:    $"+p);
+            if(p.length()>6){
+                p = p.substring(0,p.length()-6)+","+p.substring(p.length()-6);
+                if(p.length()>10)
+                    p = p.substring(0,p.length()-10)+","+p.substring(p.length()-10);
+            }
+            pw.println("Total:      $"+p);
             pw.close();
         }catch(IOException e){
             e.printStackTrace();
