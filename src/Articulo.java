@@ -156,7 +156,7 @@ public class Articulo implements Serializable{
     public String getFechaInicio_promo(){
         String date,month;
         date = String.valueOf(inicio_promo.get(Calendar.DATE));
-        month = String.valueOf(inicio_promo.get(Calendar.MONTH)+1);
+        month = String.valueOf(inicio_promo.get(Calendar.MONTH));
         if(date.length()==1)
             date = "0"+date;
         if(month.length()==1)
@@ -176,7 +176,7 @@ public class Articulo implements Serializable{
     public String getFechaFin_promo(){
         String date,month;
         date = String.valueOf(fin_promo.get(Calendar.DATE));
-        month = String.valueOf(fin_promo.get(Calendar.MONTH)+1);
+        month = String.valueOf(fin_promo.get(Calendar.MONTH));
         if(date.length()==1)
             date = "0"+date;
         if(month.length()==1)
