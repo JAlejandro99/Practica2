@@ -71,16 +71,18 @@ public class Articulo implements Serializable{
     }
     public String getPrecioComas(){
         float precioFinal = precio;
-        if(Integer.valueOf(promocion)>0){
+        if(Integer.valueOf(getPromocion())>0){
             precioFinal = precio*(1-Float.valueOf(promocion)/100);
         }
         String ret = String.valueOf(redondearDecimales(precioFinal,2));
+        if(ret.charAt(ret.length()-2)=='.')
+                    ret=ret+"0";
         if(ret.length()>6){
             ret = ret.substring(0,ret.length()-6)+","+ret.substring(ret.length()-6);
             if(ret.length()>10)
                 ret = ret.substring(0,ret.length()-10)+","+ret.substring(ret.length()-10);
         }
-        if(Integer.valueOf(promocion)>0){
+        if(Integer.valueOf(getPromocion())>0){
             String ret2 = String.valueOf(redondearDecimales(precio,2));
             if(ret2.charAt(ret2.length()-2)=='.')
                 ret2+="0";
@@ -107,8 +109,8 @@ public class Articulo implements Serializable{
     public String getPrecioComas2(){
         float p = precio;
         String ret = String.valueOf(redondearDecimales(p,2));
-        //if(ret.charAt(ret.length()-2)=='.')
-            //ret+="0";
+        if(ret.charAt(ret.length()-2)=='.')
+            ret+="0";
         if(ret.length()>6){
             ret = ret.substring(0,ret.length()-6)+","+ret.substring(ret.length()-6);
             if(ret.length()>10)
@@ -118,7 +120,7 @@ public class Articulo implements Serializable{
         return ret;
     }
     public String getCantidadPromocion(){
-        String ret = String.valueOf(precio*Float.valueOf(promocion)/100);
+        String ret = String.valueOf(redondearDecimales(Float.valueOf(promocion)*precio/100,2));
         if(ret.charAt(ret.length()-2)=='.')
             ret+="0";
         if(ret.length()>6){

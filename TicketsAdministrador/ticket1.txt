@@ -1,0 +1,11 @@
+Número de ticket: 1
+Fecha de compra: 5/11/2020
+
+Id      /Producto    /Cantidad    /Precio
+00000001      HP Laptop 15-dy1002la      1      $10,037.73
+              Descuento por cada HP Laptop 15-dy1002la      -$1,003.77
+00000004      Seagate ST1000DM010      1      $1,039.00
+00000005      Microsoft P58-00061 MOUMSF030      18      $199.00
+              Descuento por cada Microsoft P58-00061 MOUMSF030      -$29.85
+
+Total:      $13,117.66

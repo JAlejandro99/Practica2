@@ -74,6 +74,8 @@ public class PrincipalCliente extends javax.swing.JFrame {
         for(int i=0;i<carrito.size();i++)
             total+=carrito.get(i).getPrecio()*carrito.get(i).getCantidad_Existencias();
         ret = String.valueOf(redondearDecimales(total,2));
+        if(ret.charAt(ret.length()-2)=='.')
+                    ret=ret+"0";
         if(ret.length()>6){
             ret = ret.substring(0,ret.length()-6)+","+ret.substring(ret.length()-6);
             if(ret.length()>10)

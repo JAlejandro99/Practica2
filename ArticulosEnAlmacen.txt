@@ -1,22 +1,22 @@
 00000000
 Lenovo Ideal Pad S340
-22399.0
-16
+22399.99
+0
 
 0
 LenovoIdealPadCorei7-1.jpg,LenovoIdealPadCorei7-2.jpg,LenovoIdealPadCorei7-3.jpg,LenovoIdealPadCorei7-4.jpg,
 00000001
 HP Laptop 15-dy1002la
 10037.73
-18
+5
 
 10
-2021/01/06
+2020/01/06
 2021/05/02
 HP15-d1002la-1.jpg,HP15-d1002la-2.jpg,HP15-d1002la-3.jpg,
 00000002
 Lenovo IDEACENTRE 330 20IGM
-4562.844
+4562.84
 28
 
 30
@@ -33,14 +33,14 @@ Gigabyte GV-R55XTOC-8GD-1.jpg,Gigabyte GV-R55XTOC-8GD-2.jpg,Gigabyte GV-R55XTOC-
 00000004
 Seagate ST1000DM010
 1039.0
-69
+65
 Barracuda-Disco Duro Interno, 1TB, 3.5"
 0
 Seagate1TB-1.jpg,Seagate1TB-2.jpg,Seagate1TB-3.jpg,Seagate1TB-4.jpg,Seagate1TB-5.jpg,Seagate1TB-6.jpg,
 00000005
 Microsoft P58-00061 MOUMSF030
 199.0
-78
+32
 Mouse Optical Basic, Negro, 3 Botones, Usb, Óptico
 15
 2020/02/04
@@ -48,10 +48,10 @@ Mouse Optical Basic, Negro, 3 Botones, Usb, Óptico
 Microsoft P58-00061-1.jpg,Microsoft P58-00061-2.jpg,Microsoft P58-00061-3.jpg,Microsoft P58-00061-4.jpg,Microsoft P58-00061-5.jpg,Microsoft P58-00061-6.jpg,
 00000006
 Samsung LC24F390FHLXZX
-40597.75
+4597.75
 300
 Monitor Curvo, Negro (Black High Glossy), 23.5”
 50
-2020/10/02
-2020/11/10
+2020/10/08
+2020/10/20
 SamsungMonitor-1.jpg,SamsungMonitor-2.jpg,SamsungMonitor-3.jpg,SamsungMonitor-4.jpg,SamsungMonitor-5.jpg,SamsungMonitor-6.jpg,SamsungMonitor-7.jpg,SamsungMonitor-8.jpg,SamsungMonitor-9.jpg,SamsungMonitor-10.jpg,SamsungMonitor-11.jpg,SamsungMonitor-12.jpg,

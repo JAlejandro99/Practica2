@@ -293,8 +293,8 @@ public class Servidor {
             }
             pw.println();
             p = String.valueOf(redondearDecimales(total,2));
-            //if(p.charAt(p.length()-2)=='.')
-            //        p=p+"0";
+            if(p.charAt(p.length()-2)=='.')
+                    p=p+"0";
             if(p.length()>6){
                 p = p.substring(0,p.length()-6)+","+p.substring(p.length()-6);
                 if(p.length()>10)
