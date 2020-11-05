@@ -1,7 +1,0 @@
-Número de ticket: 1
-Fecha de compra: 4/11/2020
-
-Id      /Producto    /Cantidad    /Precio
-00000000      Lenovo Ideal Pad S340      1      $22,399.00
-
-Total:      $22,399.00

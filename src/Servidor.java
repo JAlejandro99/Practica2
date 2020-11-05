@@ -135,8 +135,9 @@ public class Servidor {
                 art.setNombre(almacenamiento.readLine());
                 art.setPrecio(Float.valueOf(almacenamiento.readLine()));
                 art.setCantidad_Existencias(Integer.valueOf(almacenamiento.readLine()));
+                art.setDescripcion(almacenamiento.readLine());
                 art.setPromocion(almacenamiento.readLine());
-                if(!art.getPromocion().equals("0")){
+                if(!art.getPromocion2().equals("0")){
                     fecha = getFecha(almacenamiento.readLine());
                     art.setFechaInicio_promo(fecha[0],fecha[1],fecha[2]);
                     fecha = getFecha(almacenamiento.readLine());
@@ -249,10 +250,11 @@ public class Servidor {
                 Articulo art = articulos.get(i);
                 pw.println(art.getId());
                 pw.println(art.getNombre());
-                pw.println(String.valueOf(art.getPrecio()));
+                pw.println(String.valueOf(art.getPrecio2()));
                 pw.println(String.valueOf(art.getCantidad_Existencias()));
-                pw.println(art.getPromocion());
-                if(!art.getPromocion().equals("0")){
+                pw.println(art.getDescripcion());
+                pw.println(art.getPromocion2());
+                if(!art.getPromocion2().equals("0")){
                     pw.println(art.getFechaInicio_promo());
                     pw.println(art.getFechaFin_promo());
                 }
@@ -284,13 +286,15 @@ public class Servidor {
             pw.println("Id      /Producto    /Cantidad    /Precio");
             for(int i=0;i<articulos.size();i++){
                 Articulo art = articulos.get(i);
-                pw.println(art.getId()+"      "+art.getNombre()+"      "+String.valueOf(art.getCantidad_Existencias())+"      $"+String.valueOf(art.getPrecioComas()));
+                pw.println(art.getId()+"      "+art.getNombre()+"      "+String.valueOf(art.getCantidad_Existencias())+"      "+art.getPrecioComas2());
+                if(Integer.valueOf(art.getPromocion())>0)
+                    pw.println("              Descuento por cada "+art.getNombre()+"      "+art.getCantidadPromocion());
                 total = total+art.getCantidad_Existencias()*art.getPrecio();
             }
             pw.println();
-            p = String.valueOf(total);
-            if(p.charAt(p.length()-2)=='.')
-                    p=p+"0";
+            p = String.valueOf(redondearDecimales(total,2));
+            //if(p.charAt(p.length()-2)=='.')
+            //        p=p+"0";
             if(p.length()>6){
                 p = p.substring(0,p.length()-6)+","+p.substring(p.length()-6);
                 if(p.length()>10)
@@ -302,5 +306,14 @@ public class Servidor {
             e.printStackTrace();
         }
         return ticket;
+    }
+    public static float redondearDecimales(float valorInicial, int numeroDecimales) {
+        float parteEntera, resultado;
+        resultado = valorInicial;
+        parteEntera = (float) Math.floor(resultado);
+        resultado=(float) ((resultado-parteEntera)*Math.pow(10, numeroDecimales));
+        resultado=Math.round(resultado);
+        resultado=(float) ((resultado/Math.pow(10, numeroDecimales))+parteEntera);
+        return resultado;
     }
 }

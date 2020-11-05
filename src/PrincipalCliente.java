@@ -73,15 +73,22 @@ public class PrincipalCliente extends javax.swing.JFrame {
         String ret;
         for(int i=0;i<carrito.size();i++)
             total+=carrito.get(i).getPrecio()*carrito.get(i).getCantidad_Existencias();
-        ret = String.valueOf(total);
-        if(ret.charAt(ret.length()-2)=='.')
-            ret = ret+"0";
+        ret = String.valueOf(redondearDecimales(total,2));
         if(ret.length()>6){
             ret = ret.substring(0,ret.length()-6)+","+ret.substring(ret.length()-6);
             if(ret.length()>10)
                 ret = ret.substring(0,ret.length()-10)+","+ret.substring(ret.length()-10);
         }
         return ret;
+    }
+    public float redondearDecimales(float valorInicial, int numeroDecimales) {
+        float parteEntera, resultado;
+        resultado = valorInicial;
+        parteEntera = (float) Math.floor(resultado);
+        resultado=(float) ((resultado-parteEntera)*Math.pow(10, numeroDecimales));
+        resultado=Math.round(resultado);
+        resultado=(float) ((resultado/Math.pow(10, numeroDecimales))+parteEntera);
+        return resultado;
     }
     //Recorre todo el arreglo del carrito para crear las Plantillas de cada Articulo
     public void cargarPlantillaCarrito(){
@@ -143,17 +150,26 @@ public class PrincipalCliente extends javax.swing.JFrame {
         ContenedorIzq.add(BotonesImg, BorderLayout.NORTH);
  //CONTENEDOR DERECHO
         //JPanel ContenedorDer = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel ContenedorDer = new JPanel(new GridLayout(6,1));
+        JPanel ContenedorDer = new JPanel(new GridLayout(8,1));
         ContenedorDer.setBackground(Color.WHITE);
         
         JLabel nombreArt = new JLabel(".    "+A.getNombre().toUpperCase()+"");
         nombreArt.setFont(new Font("Agency FB", Font.BOLD, 45));
         
-        JLabel precioArt = new JLabel("+   Precio: $ "+A.getPrecioComas());
+        JLabel precioArt = new JLabel("+   Precio: "+A.getPrecioComas());
         precioArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
         
-        JLabel descripArt = new JLabel("+   Descripcion:  "+A.getPromocion());
-        descripArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
+        JLabel promocionArt = new JLabel();
+        JLabel promocion2Art = new JLabel();
+        if(Integer.valueOf(A.getPromocion())>0){
+            promocionArt = new JLabel("+   Obten un "+A.getPromocion()+"% de descuento en la compra de este producto,");
+            promocionArt.setFont(new Font("Agency FB", Font.PLAIN, 30));
+            promocion2Art = new JLabel("   promoción válida únicamente del "+A.getFechaInicio_promo2()+" al "+A.getFechaFin_promo2());
+            promocion2Art.setFont(new Font("Agency FB", Font.PLAIN, 30));
+        }
+        
+        JLabel descripArt = new JLabel("+   Descripcion:  "+A.getDescripcion());
+        descripArt.setFont(new Font("Agency FB", Font.PLAIN, 30));
         
         JLabel disponiArt = new JLabel("+   Disponibles:  "+A.getCantidad_Existencias()+" Articulos.");
         disponiArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
@@ -185,6 +201,10 @@ public class PrincipalCliente extends javax.swing.JFrame {
         
         ContenedorDer.add(nombreArt);
         ContenedorDer.add(precioArt);
+        if(Integer.valueOf(A.getPromocion())>0){
+            ContenedorDer.add(promocionArt);
+            ContenedorDer.add(promocion2Art);
+        }
         ContenedorDer.add(descripArt);
         ContenedorDer.add(disponiArt);
         ContenedorDer.add(jcantidadnumero);
@@ -245,17 +265,26 @@ public class PrincipalCliente extends javax.swing.JFrame {
         ContenedorIzq.add(BotonesImg, BorderLayout.NORTH);
  //CONTENEDOR DERECHO
         //JPanel ContenedorDer = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel ContenedorDer = new JPanel(new GridLayout(5,1));
+        JPanel ContenedorDer = new JPanel(new GridLayout(7,1));
         ContenedorDer.setBackground(Color.WHITE);
         
         JLabel nombreArt = new JLabel(".    "+A.getNombre().toUpperCase()+"");
         nombreArt.setFont(new Font("Agency FB", Font.BOLD, 45));
         
-        JLabel precioArt = new JLabel("+   Precio: $ "+A.getPrecioComas());
+        JLabel precioArt = new JLabel("+   Precio: "+A.getPrecioComas());
         precioArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
         
-        JLabel descripArt = new JLabel("+   Descripcion:  "+A.getPromocion());
-        descripArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
+        JLabel promocionArt = new JLabel();
+        JLabel promocion2Art = new JLabel();
+        if(Integer.valueOf(A.getPromocion())>0){
+            promocionArt = new JLabel("+   Obten un "+A.getPromocion()+"% de descuento en la compra de este producto,");
+            promocionArt.setFont(new Font("Agency FB", Font.PLAIN, 30));
+            promocion2Art = new JLabel("   promoción válida únicamente del "+A.getFechaInicio_promo2()+" al "+A.getFechaFin_promo2());
+            promocion2Art.setFont(new Font("Agency FB", Font.PLAIN, 30));
+        }
+        
+        JLabel descripArt = new JLabel("+   Descripcion:  "+A.getDescripcion());
+        descripArt.setFont(new Font("Agency FB", Font.PLAIN, 30));
         
         JLabel disponiArt = new JLabel("+   Seleccionados:  "+A.getCantidad_Existencias()+" Articulos.");
         disponiArt.setFont(new Font("Agency FB", Font.PLAIN, 40));
@@ -276,6 +305,10 @@ public class PrincipalCliente extends javax.swing.JFrame {
         
         ContenedorDer.add(nombreArt);
         ContenedorDer.add(precioArt);
+        if(Integer.valueOf(A.getPromocion())>0){
+            ContenedorDer.add(promocionArt);
+            ContenedorDer.add(promocion2Art);
+        }
         ContenedorDer.add(descripArt);
         ContenedorDer.add(disponiArt);
         ContenedorDer.add(btnEliminar);
@@ -305,9 +338,10 @@ public class PrincipalCliente extends javax.swing.JFrame {
         Articulo Atemp = new Articulo();
         boolean auxiliar=false;
         Atemp.setId(A.getId());
-        Atemp.setPrecio(A.getPrecio());
+        Atemp.setPrecio(A.getPrecio2());
         Atemp.setNombre(A.getNombre());
         Atemp.setCantidad_Existencias(cantidad);
+        Atemp.setDescripcion(A.getDescripcion());
         Atemp.setPromocion(A.getPromocion());
         Atemp.setImagenes(A.getImagenes());
         Atemp.setInicio_promo(A.getInicio_promo());

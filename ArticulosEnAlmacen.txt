@@ -1,46 +1,57 @@
 00000000
 Lenovo Ideal Pad S340
 22399.0
-17
+16
+
 0
 LenovoIdealPadCorei7-1.jpg,LenovoIdealPadCorei7-2.jpg,LenovoIdealPadCorei7-3.jpg,LenovoIdealPadCorei7-4.jpg,
 00000001
 HP Laptop 15-dy1002la
-16999.0
-20
+10037.73
+18
+
 10
-2023/10/03
-2023/10/09
+2021/01/06
+2021/05/02
 HP15-d1002la-1.jpg,HP15-d1002la-2.jpg,HP15-d1002la-3.jpg,
 00000002
 Lenovo IDEACENTRE 330 20IGM
-9298.8
+4562.844
+28
+
 30
-30
-2023/11/18
-2023/11/20
+2020/10/22
+2021/08/02
 Lenovo IDEACENTRE 330-20IGM-1.jpg,
 00000003
-Gigabyte GV-R55XTOC-8GD,Negro
+Gigabyte GV-R55XTOC-8GD
 5530.83
-50
+49
+Negro
 0
 Gigabyte GV-R55XTOC-8GD-1.jpg,Gigabyte GV-R55XTOC-8GD-2.jpg,Gigabyte GV-R55XTOC-8GD-3.jpg,Gigabyte GV-R55XTOC-8GD-4.jpg,Gigabyte GV-R55XTOC-8GD-5.jpg,Gigabyte GV-R55XTOC-8GD-6.jpg,Gigabyte GV-R55XTOC-8GD-7.jpg,Gigabyte GV-R55XTOC-8GD-8.jpg,
 00000004
-Seagate ST1000DM010 Barracuda-Disco Duro Interno, 1TB, 3.5"
+Seagate ST1000DM010
 1039.0
-70
+69
+Barracuda-Disco Duro Interno, 1TB, 3.5"
 0
 Seagate1TB-1.jpg,Seagate1TB-2.jpg,Seagate1TB-3.jpg,Seagate1TB-4.jpg,Seagate1TB-5.jpg,Seagate1TB-6.jpg,
 00000005
-Microsoft P58-00061 MOUMSF030 Mouse Optical Basic, Negro, 3 Botones, Usb, Óptico
+Microsoft P58-00061 MOUMSF030
 199.0
-80
-0
+78
+Mouse Optical Basic, Negro, 3 Botones, Usb, Óptico
+15
+2020/02/04
+2021/02/20
 Microsoft P58-00061-1.jpg,Microsoft P58-00061-2.jpg,Microsoft P58-00061-3.jpg,Microsoft P58-00061-4.jpg,Microsoft P58-00061-5.jpg,Microsoft P58-00061-6.jpg,
 00000006
-Samsung LC24F390FHLXZX - Monitor Curvo, Negro (Black High Glossy), 23.5”
-3247.79
+Samsung LC24F390FHLXZX
+40597.75
 300
-0
+Monitor Curvo, Negro (Black High Glossy), 23.5”
+50
+2020/10/02
+2020/11/10
 SamsungMonitor-1.jpg,SamsungMonitor-2.jpg,SamsungMonitor-3.jpg,SamsungMonitor-4.jpg,SamsungMonitor-5.jpg,SamsungMonitor-6.jpg,SamsungMonitor-7.jpg,SamsungMonitor-8.jpg,SamsungMonitor-9.jpg,SamsungMonitor-10.jpg,SamsungMonitor-11.jpg,SamsungMonitor-12.jpg,

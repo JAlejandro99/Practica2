@@ -1,3 +1,4 @@
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,6 +16,7 @@ public class Ticket extends javax.swing.JFrame {
     public Ticket(String ticket){
         initComponents();
         jta.setEditable(false);
+        jta.setFont(new Font("Agency FB", Font.PLAIN, 25));
         try{
             File f = new File(ticket);
             FileReader leer = new FileReader(f);
@@ -46,6 +48,7 @@ public class Ticket extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
+        aceptar.setFont(new java.awt.Font("Tahoma", 0, 25)); // NOI18N
         aceptar.setText("Aceptar");
         aceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -65,7 +68,7 @@ public class Ticket extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 299, Short.MAX_VALUE)
+                        .addGap(0, 515, Short.MAX_VALUE)
                         .addComponent(aceptar))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
@@ -74,7 +77,7 @@ public class Ticket extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(aceptar)
                 .addContainerGap())
